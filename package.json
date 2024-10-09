@@ -1,7 +1,17 @@
 {
-  "name": "midu-cloudinary",
+  "name": "halloween-hackathon",
+  "description": "Hackathon de Midudev con Cloudinary, tematica Halloween - 2024 ",
+  "author": {
+    "name": "Ezequiel Zapata",
+    "email": "Zapata.ed1989@gmail.com",
+    "url": "https://zapataezequiel.netlify.app/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ezequielz/halloween-hackathon"
+  },
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,18 +19,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "cloudinary": "^2.5.1",
+    "next": "14.2.15",
+    "next-cloudinary": "^6.14.1",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.15"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.15",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.15"
+    "typescript": "^5"
   }
 }
