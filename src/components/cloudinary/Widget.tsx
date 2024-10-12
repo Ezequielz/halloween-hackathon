@@ -1,11 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import { useEffect, useState } from 'react';
+// import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { CldUploadWidget } from 'next-cloudinary';
-import Image from 'next/image';
-import { useState } from 'react';
+// import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface ResourceInfo {
+    folder: string;
     public_id: string;
     secure_url: string;
 }
@@ -14,7 +18,22 @@ export const Widget = () => {
 
     const [resource, setResource] = useState<ResourceInfo | undefined>();
 
+    const router = useRouter();
 
+    useEffect(() => {
+        if (resource)
+        router.push(`/edit/${resource?.public_id}`)
+    
+    }, [resource])
+    
+
+    if ( resource) {
+        return (
+            <div>
+                Imagen cargada, espere...
+            </div>
+        )
+    }
     return (
         <CldUploadWidget
             uploadPreset='halloween'
@@ -46,30 +65,28 @@ export const Widget = () => {
                 result: any,
                 // { widget }: { widget: any }
             ) => {
+                const newResource = {
+                    folder: result?.info?.folder,
+                    public_id: result?.info?.public_id.split('/').at(1),
+                    secure_url: result?.info?.secure_url
+                }
+                setResource(newResource); // { public_id, secure_url, etc }
 
-                setResource(result?.info); // { public_id, secure_url, etc }
             }}
             onQueuesEnd={(_result: any, { widget }: { widget: any }) => {
-                console.log('end queue')
+                              
                 widget.close();
             }}
         >
             {({ open }: { open: () => void }) => {
                 function handleOnClick() {
-                    setResource(undefined);
+                    
                     open();
                 }
                 return (
                     <button onClick={handleOnClick}>
                         Upload an Image
-                        {resource && (
-                            <Image
-                                src={resource.secure_url}
-                                alt="Uploaded image"
-                                height={500}
-                                width={500}
-                            />
-                        )}
+                      
                     </button>
                 );
             }}
