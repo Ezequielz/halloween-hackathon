@@ -49,8 +49,9 @@ export default async function EditPage({ params }: Props) {
 
     const url = await getCldImageUrl({
         src: `halloween-images/${imgId}`,    
+     
     });
-
+    
     return (
         <div >
 
