@@ -1,49 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { useEffect, useState } from 'react';
 import { CldImage, getCldImageUrl } from 'next-cloudinary';
 import { Rnd } from 'react-rnd'; // React RND for drag and resize
+import type { Background, Overlay, Sticker, Text } from '@/interfaces';
+import { DraggableText } from './DragableText';
+import { TextOverlayMenu } from './TextOverlayMenu';
 // import Image from 'next/image';
 
 interface Props {
   url: string;
 }
-interface Sticker {
-  id: string;
-  name: string;
-  publicId: string;
-  position: PositionSticker;
-  size: SizeSticker;
-}
 
-type PositionSticker = {
-  x: number;
-  y: number;
-  angle: number;
-}
-type SizeSticker = {
-  width: number;
-  height: number;
-}
-interface Overlay {
-  publicId: string;
-  position: {
-    angle: number;
-    x: number;
-    y: number;
-    gravity: string;
-  };
-  effects: {
-    crop: string;
-    width: number;
-    height: number;
-  }[];
-}
+const initialText: Text = {
+  content: '',
+  position: { x: 0, y: 0, angle: 0 },
+  fontFamily: 'Arial',
+  color: '#000000',
+  fontWeight: 'bold',
+  size: 24,
 
-interface Backgrund {
-  id: string;
-  publicId: string;
 }
 
 export const GenerateImage = ({ url }: Props) => {
@@ -51,14 +29,34 @@ export const GenerateImage = ({ url }: Props) => {
   const [underlay, setUnderlay] = useState('halloween-images/pqpbmcpt71993avpnglm')
   const [allSelectedStickers, setAllSelectedStickers] = useState<Sticker[]>([]);
   const [stickers, setStickers] = useState<Sticker[]>([]);
-  const [backgrounds, setBackgrounds] = useState<Backgrund[]>([])
+  const [backgrounds, setBackgrounds] = useState<Background[]>([])
   const [imgCreated, setImgCreated] = useState<string>('');
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [actualWidthShownInFrontend, setActualWidthShownInFrontend] = useState(0);
   const [actualHeightShownInFrontend, setActualHeightShownInFrontend] = useState(0);
   const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
   const [selectedSticker, setSelectedSticker] = useState<Sticker | null>(null);
-// console.log(selectedStickerId, selectedSticker)
+  const [text, setText] = useState<Text>(initialText);
+  console.log(overlays)
+  // Función para agregar un nuevo texto
+  const addText = (content: string) => {
+
+    if (!content) return setText(initialText);
+
+    const newText: Text = {
+      id: Date.now().toString(),
+      content: content,
+      position: { x: text.position.x ?? 50 , y: text.position.y ?? 50, angle: text.position.angle ?? 0 },
+      fontFamily: text.fontFamily ?? 'Arial',
+      fontWeight: text.fontWeight ?? 'normal',
+      color: text.color ?? 'black',
+      size: text.size ?? 24,
+    };
+    setText(newText);
+  };
+
+  // console.log(selectedStickerId, selectedSticker)
+
 
   const handleSelectSticker = (id?: string) => {
     if (!id) {
@@ -67,7 +65,7 @@ export const GenerateImage = ({ url }: Props) => {
       return;
     }
     const sticker = allSelectedStickers.find((sticker) => sticker.id === id);
-  
+
     setSelectedStickerId(id);
     setSelectedSticker(sticker ?? null);
   };
@@ -152,6 +150,7 @@ export const GenerateImage = ({ url }: Props) => {
     handleSelectSticker(selectedStickerId ?? undefined)
   }, [allSelectedStickers]);
 
+
   useEffect(() => {
     const newUrl = getCldImageUrl({
       src: url,
@@ -173,6 +172,35 @@ export const GenerateImage = ({ url }: Props) => {
 
     setImgCreated(newUrl);
   }, [overlays, underlay]);
+
+  useEffect(() => {
+    if (!text.content) return; // Asegúrate de que el texto no esté vacío
+
+    const textOverlay = {
+      // publicId: 'text', // Public ID can be anything, since it's text overlay
+      text: {
+        color: text.color,
+        fontFamily: text.fontFamily,
+        fontSize: text.size,
+        fontWeight: text.fontWeight,
+        text: text.content,
+      },
+      position: {
+        gravity: 'north_west',
+        x: Math.round(text.position.x * (imageDimensions.width / actualWidthShownInFrontend)),
+        y: Math.round(text.position.y * (imageDimensions.height / actualHeightShownInFrontend)),
+        angle: text.position.angle,
+      },
+    };
+
+    // Combina los overlays de stickers y texto
+    const updatedOverlays = [
+      ...allSelectedStickers.map((sticker) => newOverlay(sticker)),
+      textOverlay,
+    ];
+
+    setOverlays(updatedOverlays);
+  }, [text, allSelectedStickers]);
 
   const addSticker = (name: string) => {
 
@@ -283,6 +311,50 @@ export const GenerateImage = ({ url }: Props) => {
 
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newText = e.target.value;
+    addText(newText);
+    // onUpdateText({
+    //   ...text,
+    //   content: newText,
+    // });
+  };
+
+  const updateText = (
+    newX?: number,
+    newY?: number,
+    fontSize?: number,
+    newAngle?: string,) => {
+
+    if (!text) return;
+
+
+    const textToUpdate: Text = {
+      ...text,
+      position: {
+        x: newX ? Math.round(newX) : text.position.x,
+        y: newY ? Math.round(newY) : text.position.y,
+        angle: newAngle ? +newAngle : text.position.angle
+      },
+      size: fontSize ? fontSize : text.size
+    }
+
+    setText(textToUpdate);
+  };
+
+  const handleTextChange = (field: string, value: any) => {
+    setText((prev) => {
+      
+      if (prev[field] !== value) {
+        return {
+          ...prev,
+          [field]: value,
+        };
+      }
+      return prev; 
+    });
+  };
+
   return (
     <section>
       <div className="flex gap-3">
@@ -315,7 +387,11 @@ export const GenerateImage = ({ url }: Props) => {
             </button>
           ))}
 
-          <h3>Text:</h3>
+
+          <h3>Agrega un texto</h3>
+          <TextOverlayMenu text={text} onTextChange={handleTextChange} handleInputChange={handleInputChange}/>
+       
+
         </div>
 
         <div className="w-3/5 flex justify-center">
@@ -347,7 +423,12 @@ export const GenerateImage = ({ url }: Props) => {
                 className={`h-full w-auto `} // Ajustar a pantalla completa manteniendo proporciones
               />
             </picture>
+            {
+              text && (
 
+                <DraggableText key={text.id} text={text} onUpdateText={updateText} />
+              )
+            }
             {allSelectedStickers.map((sticker) => (
               <Rnd
                 key={sticker.id}
@@ -374,13 +455,13 @@ export const GenerateImage = ({ url }: Props) => {
                   unoptimized
                   crop="fit"
                   style={{
+                    filter: selectedStickerId === sticker.id
+                      ? 'drop-shadow(0 0 0.75rem red)' // Sombra roja
+                      : 'none', // Sin sombra
                     transform: `rotate(${sticker.position.angle}deg)`, // Aplica la rotación aquí
                     transition: 'transform 0.2s ease' // Transición suave para la rotación
                   }}
-                  className={`${selectedStickerId === sticker.id
-                    ? ' filter drop-shadow-[0_8px_16px_rgba(255,0,0,0.95)] ' // Sombra grande y roja
-                    : ''
-                    }`}
+
                 />
 
               </Rnd>
