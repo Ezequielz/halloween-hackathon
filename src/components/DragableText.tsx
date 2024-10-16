@@ -1,19 +1,41 @@
+'use client'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Rnd } from 'react-rnd';
 import type { Text } from '@/interfaces';
+import { useImageEditor } from '@/hooks';
 
 
 interface Props {
-  text: Text;
-  onUpdateText: (newX?: number, newY?: number) => void;
+  url: string
 }
 
-export const DraggableText= ({ text, onUpdateText }: Props) => {
+export const DraggableText = ({ url }: Props) => {
+
+  const { text, setText } = useImageEditor(url);
+  const updateText = (
+    newX?: number,
+    newY?: number,
+    fontSize?: number,
+    newAngle?: string,) => {
+
+    if (!text) return;
 
 
+    const textToUpdate: Text = {
+      ...text,
+      position: {
+        x: newX ? Math.round(newX) : text.position.x,
+        y: newY ? Math.round(newY) : text.position.y,
+        angle: newAngle ? +newAngle : text.position.angle
+      },
+      size: fontSize ? fontSize : text.size
+    }
+
+    setText(textToUpdate);
+  };
   const handleDragStop = (e: any, d: any) => {
-    onUpdateText(+d.x, +d.y);
+    updateText(+d.x, +d.y);
   };
 
 
