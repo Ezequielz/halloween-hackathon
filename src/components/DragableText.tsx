@@ -2,17 +2,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Rnd } from 'react-rnd';
-import type { Text } from '@/interfaces';
-import { useImageEditor } from '@/hooks';
+import type { TextImage } from '@/interfaces';
+import { useImageStore } from '@/store';
 
 
-interface Props {
-  url: string
-}
 
-export const DraggableText = ({ url }: Props) => {
+export const DraggableText = () => {
 
-  const { text, setText } = useImageEditor(url);
+  const { text, setText } = useImageStore(store => store);
   const updateText = (
     newX?: number,
     newY?: number,
@@ -22,7 +19,7 @@ export const DraggableText = ({ url }: Props) => {
     if (!text) return;
 
 
-    const textToUpdate: Text = {
+    const textToUpdate: TextImage = {
       ...text,
       position: {
         x: newX ? Math.round(newX) : text.position.x,

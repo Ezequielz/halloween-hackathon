@@ -1,17 +1,13 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import { useImageEditor } from '@/hooks';
-import type { Text } from '@/interfaces';
+import type { TextImage } from '@/interfaces';
+import { useImageStore } from '@/store';
 
-
-interface Props {
-    url: string;
-}
 
 const fonts = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Trebuchet MS'];
 
-const initialText: Text = {
+const initialText: TextImage = {
     content: '',
     position: { x: 0, y: 0, angle: 0 },
     fontFamily: 'Arial',
@@ -20,9 +16,9 @@ const initialText: Text = {
     size: 24,
 };
 
-export const TextOverlayMenu = ({ url  }: Props) => {
+export const TextOverlayMenu = () => {
 
-    const { text, setText } = useImageEditor(url);
+    const { text, setText } = useImageStore();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newText = e.target.value;
@@ -32,7 +28,7 @@ export const TextOverlayMenu = ({ url  }: Props) => {
     const addText = (content: string) => {
         if (!content) return setText(initialText);
 
-        const newText: Text = {
+        const newText: TextImage = {
             id: Date.now().toString(),
             content,
             position: { x: text.position.x ?? 50, y: text.position.y ?? 50, angle: text.position.angle ?? 0 },
@@ -45,16 +41,19 @@ export const TextOverlayMenu = ({ url  }: Props) => {
     };
 
     const handleTextChange = (field: string, value: any) => {
-        setText((prev) => {
 
-            if (prev[field] !== value) {
+        const updateText = () => {
+
+            if (text[field] !== value) {
                 return {
-                    ...prev,
+                    ...text,
                     [field]: value,
                 };
             }
-            return prev;
-        });
+            return text;
+        }
+       
+        setText(updateText());
     };
     
     return (

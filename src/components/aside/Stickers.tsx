@@ -1,8 +1,9 @@
-'use client'
+'use client';
 
-import { CldImage } from "next-cloudinary"
-import type { Sticker } from "@/interfaces"
-import { useImageEditor } from "@/hooks"
+import { CldImage } from "next-cloudinary";
+import { useImageStore } from "@/store";
+import type { Sticker } from "@/interfaces";
+import { useImageEditor } from "@/hooks";
 
 interface Props {
     url: string;
@@ -10,8 +11,8 @@ interface Props {
 }
 export const Stickers = ({ stickers, url }: Props) => {
 
-    const { allSelectedStickers, 
-        setAllSelectedStickers, setSelectedSticker, setSelectedStickerId } = useImageEditor(url);
+    const { setAllSelectedStickers, allSelectedStickers} = useImageStore();
+    const { handleSelectSticker } = useImageEditor(url);
 
     const addSticker = (name: string) => {
 
@@ -26,22 +27,17 @@ export const Stickers = ({ stickers, url }: Props) => {
         };
 
 
-        setAllSelectedStickers((prevStickers) => [...prevStickers, { ...newSticker, id: newId }]);
+        const newAllStickers: Sticker[] = [
+            ...allSelectedStickers,
+            newSticker
+        ]
+
+
+        setAllSelectedStickers(newAllStickers);
         handleSelectSticker(newSticker.id);
     };
 
-    const handleSelectSticker = (id?: string) => {
-        if (!id) {
-            setSelectedSticker(null);
-            setSelectedStickerId(null);
-            return;
-        }
-        const sticker = allSelectedStickers.find((sticker) => sticker.id === id);
-
-        setSelectedStickerId(id);
-        setSelectedSticker(sticker ?? null);
-    };
-
+  
     return (
         <section>
 

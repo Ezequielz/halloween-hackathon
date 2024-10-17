@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export interface Text {
+export interface TextImage {
     id?: string;
     content: string;
-    position: PositionText;
+    position: PositionTextImage;
     fontFamily: string;
     color: string;
     size: number;
@@ -11,7 +11,7 @@ export interface Text {
 }
 
 
-export type PositionText = {
+export type PositionTextImage = {
     x: number;
     y: number;
     angle: number;

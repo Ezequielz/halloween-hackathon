@@ -1,36 +1,38 @@
+'use client'
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { getCldImageUrl } from 'next-cloudinary';
-import type { Background, Overlay, Sticker, Text } from '@/interfaces';
+import type { Sticker, Underlay } from '@/interfaces';
+import { useImageStore } from '@/store';
 
-const initialText: Text = {
-    content: '',
-    position: { x: 0, y: 0, angle: 0 },
-    fontFamily: 'Arial',
-    color: '#000000',
-    fontWeight: 'bold',
-    size: 24,
-};
-
-const initialUnderlay = [{
-    publicId: 'halloween-images/pqpbmcpt71993avpnglm',
-    effects: [{ width: 1600, height: 900 }],
-}];
 
 export const useImageEditor = (url: string) => {
-    const [overlays, setOverlays] = useState<Overlay[]>([]);
-    const [underlay, setUnderlay] = useState(initialUnderlay);
-    const [allSelectedStickers, setAllSelectedStickers] = useState<Sticker[]>([]);
-    const [stickers, setStickers] = useState<Sticker[]>([]);
-    const [backgrounds, setBackgrounds] = useState<Background[]>([]);
-    const [imgCreated, setImgCreated] = useState<string>('');
-    const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
-    const [actualWidthShownInFrontend, setActualWidthShownInFrontend] = useState(0);
-    const [actualHeightShownInFrontend, setActualHeightShownInFrontend] = useState(0);
-    const [selectedStickerId, setSelectedStickerId] = useState<string | null>(null);
-    const [selectedSticker, setSelectedSticker] = useState<Sticker | null>(null);
-    const [text, setText] = useState<Text>(initialText);
+    const {
+        overlays,
+        underlay,
+        imageDimensions,
+        allSelectedStickers,
+        text,
+        actualWidthShownInFrontend,
+        actualHeightShownInFrontend,
+        selectedStickerId,
+
+        // METHODS
+        setImageDimensions,
+        setActualWidthShownInFrontend,
+        setActualHeightShownInFrontend,
+        setBackgrounds,
+        setUnderlay,
+        setStickers,
+        setOverlays,
+        setImgCreated,
+        setAllSelectedStickers,
+        setSelectedSticker,
+        setSelectedStickerId
+
+    } = useImageStore(state => state)
 
 
     const loadImageDimensions = (url: string) => {
@@ -38,22 +40,22 @@ export const useImageEditor = (url: string) => {
         img.src = url;
         img.onload = () => {
             setImageDimensions({ width: img.width, height: img.height });
-            const updateUnderlayDimension = [
+            const updateUnderlayDimension: Underlay[] = [
                 {
                     publicId: 'halloween-images/pqpbmcpt71993avpnglm',
-                    effects: [{ width: img.width, height: img.height, crop: 'fill' }],
+                    effects: [{ width: +img.width, height: +img.height, crop: 'fill' }],
 
                 }
             ]
 
-
+       
             setUnderlay(updateUnderlayDimension)
         };
 
 
     };
 
-  
+
     useEffect(() => {
 
         loadImageDimensions(url);
@@ -68,7 +70,7 @@ export const useImageEditor = (url: string) => {
     }, [url, imageDimensions]);
 
 
-  
+
 
 
     //TOOD reemplazarlos por DB
@@ -86,10 +88,11 @@ export const useImageEditor = (url: string) => {
     useEffect(() => {
         const updatedOverlays = allSelectedStickers.map(newOverlay);
         setOverlays(updatedOverlays);
-        // handleSelectSticker(selectedStickerId ?? undefined);
+        handleSelectSticker(selectedStickerId ?? undefined);
     }, [allSelectedStickers]);
 
     useEffect(() => {
+
         const newUrl = getCldImageUrl({
             src: url,
             width: imageDimensions.width,
@@ -153,6 +156,7 @@ export const useImageEditor = (url: string) => {
             ],
         };
     };
+
     const onStickerUpdate = (id: string,
         newX?: number,
         newY?: number,
@@ -176,35 +180,28 @@ export const useImageEditor = (url: string) => {
             }
         }
 
-        setAllSelectedStickers((prevStickers) =>
-            prevStickers.map((sticker) =>
-                sticker.id === id ? sticker = updatedSticker : sticker
-            )
-        );
+        const newAllSelectedStickers = allSelectedStickers.map((sticker) => sticker.id === id ? updatedSticker : sticker)
+
+        setAllSelectedStickers(newAllSelectedStickers);
     };
 
-    return {
-        allSelectedStickers,
-        backgrounds,
-        imageDimensions,
-        imgCreated,
-        overlays,
-        selectedSticker,
-        selectedStickerId,
-        stickers,
-        text,
-        underlay,
 
-        //Mehtods
-        
-        setText,
+    const handleSelectSticker = (id?: string) => {
+        if (!id) {
+            setSelectedSticker(null);
+            setSelectedStickerId(null);
+            return;
+        }
+        const sticker = allSelectedStickers.find((sticker) => sticker.id === id);
+
+        setSelectedStickerId(id);
+        setSelectedSticker(sticker ?? null);
+    };
+
+
+
+    return {
         onStickerUpdate,
-        setActualHeightShownInFrontend,
-        setActualWidthShownInFrontend,
-        setAllSelectedStickers,
-        setSelectedStickerId,
-        setSelectedSticker,
-        setImageDimensions,
-        setUnderlay
+        handleSelectSticker
     };
 };

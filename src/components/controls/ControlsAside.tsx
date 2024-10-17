@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useImageEditor } from '@/hooks';
 import { TextOverlayMenu } from '../TextOverlayMenu';
+import { useImageStore } from '@/store';
+import { useImageEditor } from '@/hooks';
 
 interface Props {
     url: string
@@ -10,47 +11,41 @@ interface Props {
 
 export const ControlsAside = ({ url }: Props) => {
 
-    const { selectedSticker, imgCreated, onStickerUpdate, setSelectedSticker } = useImageEditor(url);
+    const { selectedSticker, imgCreated, setSelectedSticker } = useImageStore( store => store)
+
+    const { onStickerUpdate } = useImageEditor(url)
 
     const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSize = parseInt(event.target.value);
 
 
         if (selectedSticker) {
-            // Actualiza el sticker con el nuevo tamaño
+     
             onStickerUpdate(selectedSticker.id, undefined, undefined, newSize, newSize);
 
-            // Actualiza el estado local para reflejar los cambios
-            setSelectedSticker((prev) =>
-                prev ? { ...prev, size: { width: newSize, height: newSize } } : prev
-            );
+            setSelectedSticker( { ...selectedSticker, size: { width: newSize, height: newSize } } );
         }
     };
 
     const handleAngleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newAngle = event.target.value;
         if (selectedSticker) {
-            // Actualiza el sticker con el nuevo ángulo
-            console.log(newAngle)
+    
             onStickerUpdate(selectedSticker.id, undefined, undefined, undefined, undefined, newAngle);
-
-            // Actualiza el estado local para reflejar el nuevo ángulo
-            setSelectedSticker((prev) =>
-                prev ? { ...prev, position: { ...prev.position, angle: +newAngle } } : prev
-            );
+       
+            setSelectedSticker( { ...selectedSticker, position: { ...selectedSticker.position, angle: +newAngle } } );
         }
 
 
     };
 
-
-
+  
     return (
         <aside className="w-1/5 bg-slate-900 p-4">
 
 
             <h3>Agrega un texto</h3>
-            <TextOverlayMenu url={url} />
+            <TextOverlayMenu  />
             <hr className='border-2 border-gray-500 w-full my-5' />
             {selectedSticker && (
                 <>
@@ -62,7 +57,7 @@ export const ControlsAside = ({ url }: Props) => {
                             type="range"
                             min="50"
                             max="300"
-                            value={selectedSticker.size.width} // Asegúrate de que este valor se actualice
+                            value={selectedSticker.size.width} 
                             onChange={handleSizeChange}
                         />
 

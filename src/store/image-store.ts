@@ -1,8 +1,8 @@
 
 
 
-import { Background, Overlay, Sticker, Text, Underlay } from '@/interfaces';
 import { create } from 'zustand';
+import type { Background, Overlay, Sticker, TextImage, Underlay } from '@/interfaces';
 
 interface State {
 
@@ -17,10 +17,10 @@ interface State {
     actualHeightShownInFrontend: number
     selectedStickerId: string | null
     selectedSticker: Sticker | null
-    text: Text
+    text: TextImage
 
-    setOverlays : (overlays: Overlay[]) => void
-    setUnderlay: (underlay: Underlay) => void
+    setOverlays: (overlays: Overlay[]) => void
+    setUnderlay: (underlay: Underlay[]) => void
     setAllSelectedStickers: (allSelectedStickers: Sticker[]) => void
     setStickers: (stickers: Sticker[]) => void
     setBackgrounds: (backgrounds: Background[]) => void
@@ -30,12 +30,52 @@ interface State {
     setActualHeightShownInFrontend: (actualHeightShownInFrontend: number) => void
     setSelectedStickerId: (selectedStickerId: string | null) => void
     setSelectedSticker: (selectedSticker: Sticker | null) => void
-    setText: (text: Text) => void
+    setText: (text: TextImage) => void
 }
+const initialText: TextImage = {
+    id: '1',
+    content: 'asd',
+    position: { x: 0, y: 0, angle: 0 },
+    fontFamily: 'Arial',
+    color: '#000000',
+    fontWeight: 'bold',
+    size: 24,
+};
+
+const initialUnderlay: Underlay[] = [{
+    publicId: 'halloween-images/pqpbmcpt71993avpnglm',
+    effects: [{ width: 1600, height: 900 }],
+}];
 
 
-export const useSkinsStore = create<State>()((set) => ({
+export const useImageStore = create<State>()((set) => ({
 
+    overlays: [],
+    underlay: initialUnderlay,
+    allSelectedStickers: [],
+    stickers: [],
+    backgrounds: [],
+    imgCreated: '',
+    imageDimensions: { width: 0, height: 0 },
+    actualWidthShownInFrontend: 0,
+    actualHeightShownInFrontend: 0,
+    selectedStickerId: null,
+    selectedSticker: null,
+    text: initialText,
+
+
+    setOverlays: (overlays) => set({ overlays }),
+    setUnderlay: (underlay) => set({ underlay }),
+    setAllSelectedStickers: (allSelectedStickers) => set({ allSelectedStickers }),
+    setStickers: (stickers) => set({ stickers }),
+    setBackgrounds: (backgrounds) => set({ backgrounds }),
+    setImgCreated: (imgCreated) => set({ imgCreated }),
+    setImageDimensions: (imageDimensions) => set({ imageDimensions }),
+    setActualWidthShownInFrontend: (actualWidthShownInFrontend) => set({ actualWidthShownInFrontend }),
+    setActualHeightShownInFrontend: (actualHeightShownInFrontend) => set({ actualHeightShownInFrontend }),
+    setSelectedStickerId: (selectedStickerId) => set({ selectedStickerId }),
+    setSelectedSticker: (selectedSticker) => set({ selectedSticker }),
+    setText: (text) => set({ text })
 
 
 

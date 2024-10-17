@@ -1,22 +1,22 @@
 'use client'
 
-import { useImageEditor } from "@/hooks";
+
 import { CldImage } from "next-cloudinary";
 import { DraggableText } from "../DragableText";
 import { Rnd } from "react-rnd";
+import { useImageStore } from "@/store";
+import { useImageEditor } from "@/hooks";
 
 interface Props {
     url: string
 }
 export const MainImage = ({url}:Props) => {
 
-    const { imageDimensions, underlay, text, allSelectedStickers, selectedStickerId,
-         onStickerUpdate
-     } = useImageEditor(url);
+    const { imageDimensions, underlay, text, allSelectedStickers, selectedStickerId } = useImageStore(store => store);
 
-     
+     const { onStickerUpdate } = useImageEditor(url)
 
-   
+  
     return (
         <div className="w-3/5 flex justify-center">
             <div>
@@ -43,7 +43,7 @@ export const MainImage = ({url}:Props) => {
                 {
                     text && (
 
-                        <DraggableText url={url} />
+                        <DraggableText />
                     )
                 }
                 {allSelectedStickers.map((sticker) => (

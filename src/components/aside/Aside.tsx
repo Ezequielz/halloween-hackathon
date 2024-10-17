@@ -13,8 +13,6 @@ export const Aside = async ({ url }: Props) => {
     const { stickers } = await getAllStickers();
     const { backgrounds } = await getAllBackgrounds();
 
-    console.log(stickers, backgrounds)
-
     return (
         <aside className="w-1/5 bg-slate-900 p-4">
 

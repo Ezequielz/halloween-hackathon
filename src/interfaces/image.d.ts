@@ -18,7 +18,7 @@ export interface Overlay {
 
 export interface Underlay {
   publicId: string,
-  effects: [{ width: number, height: number }],
+  effects: [{ width: number, height: number, crop?: string, gravity?: string }],
 };
 
 export interface Background {
