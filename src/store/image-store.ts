@@ -18,11 +18,14 @@ interface State {
     selectedStickerId: string | null
     selectedSticker: Sticker | null
     text: TextImage
+    textSelected: boolean
 
     setUrlDefaultImage: (urlDefaultImage: string) => void
     setOverlays: (overlays: Overlay[]) => void
     setUnderlay: (underlay: Underlay[]) => void
     setAllSelectedStickers: (allSelectedStickers: Sticker[]) => void
+    removeSticker: (id: string) => void
+    removeAllStickers: () => void
     setStickers: (stickers: Sticker[]) => void
     setBackgrounds: (backgrounds: Background[]) => void
     setImgCreated: (imgCreated: string) => void
@@ -32,6 +35,7 @@ interface State {
     setSelectedStickerId: (selectedStickerId: string | null) => void
     setSelectedSticker: (selectedSticker: Sticker | null) => void
     setText: (text: TextImage) => void
+    setTextSelected: (textSelected: boolean) => void
 }
 const initialText: TextImage = {
     content: '',
@@ -48,6 +52,7 @@ const initialUnderlay: Underlay[] = [{
 
 
 export const useImageStore = create<State>()((set) => ({
+    textSelected: false,
     urlDefaultImage: '',
     overlays: [],
     underlay: initialUnderlay,
@@ -67,6 +72,10 @@ export const useImageStore = create<State>()((set) => ({
     setOverlays: (overlays) => set({ overlays }),
     setUnderlay: (underlay) => set({ underlay }),
     setAllSelectedStickers: (allSelectedStickers) => set({ allSelectedStickers }),
+    removeSticker: (id) => set(state => ({
+        allSelectedStickers: state.allSelectedStickers.filter(sticker => sticker.id !== id)
+    })),
+    removeAllStickers: () => set({ allSelectedStickers: [] }),
     setStickers: (stickers) => set({ stickers }),
     setBackgrounds: (backgrounds) => set({ backgrounds }),
     setImgCreated: (imgCreated) => set({ imgCreated }),
@@ -75,7 +84,8 @@ export const useImageStore = create<State>()((set) => ({
     setActualHeightShownInFrontend: (actualHeightShownInFrontend) => set({ actualHeightShownInFrontend }),
     setSelectedStickerId: (selectedStickerId) => set({ selectedStickerId }),
     setSelectedSticker: (selectedSticker) => set({ selectedSticker }),
-    setText: (text) => set({ text })
+    setText: (text) => set({ text }), 
+    setTextSelected: (textSelected) => set({ textSelected })
 
 
 

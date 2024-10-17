@@ -7,27 +7,83 @@ import { useEffect, useState } from 'react';
 import { CldUploadWidget } from 'next-cloudinary';
 // import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { addBackground, addSticker } from '@/actions';
+import type { Sticker } from '@/interfaces';
 
 interface ResourceInfo {
     folder: string;
     public_id: string;
     secure_url: string;
+
 }
 
-export const Widget = () => {
+
+interface Props {
+    formats: Formats[];
+    redirect?: boolean;
+    redirectUrl?: string;
+    buttonText: string;
+    className?: string;
+    infoHeading?: string
+    asset?: 'sticker' | 'background'
+}
+
+type Formats = 'jpg' | 'jpeg' | 'png' | 'gif' | 'webp' | 'avif';
+
+export const Widget = ({ formats, redirect, redirectUrl, className, buttonText, infoHeading, asset }: Props) => {
 
     const [resource, setResource] = useState<ResourceInfo | undefined>();
 
     const router = useRouter();
 
     useEffect(() => {
-        if (resource)
-        router.push(`/edit/${resource?.public_id}`)
-    
-    }, [resource])
-    
+        if (!resource) return;
+        if (resource && redirect) {
+            return router.push(`${redirectUrl}${resource?.public_id}`)
+        }
 
-    if ( resource) {
+        const createSticker = async () => {
+            if (!resource) return;
+
+            const newSticker: Sticker = {
+                id: resource.public_id,
+                name: resource.public_id,
+                publicId: `${resource.folder}/${resource.public_id}`,
+                position: {
+                    x: 0,
+                    y: 0,
+                    angle: 0
+                },
+                size: {
+                    width: 200,
+                    height: 200
+                }
+            }
+
+            await addSticker({ sticker: newSticker, url: resource.public_id })
+        }
+
+        const createBackground = async () => {
+            if (!resource) return;
+
+            const newBackground = {
+                id: resource.public_id,
+                publicId: `${resource.folder}/${resource.public_id}`,
+            }
+
+            await addBackground({ background: newBackground, url: resource.public_id })
+
+        }
+
+        if (asset === 'sticker')  createSticker();
+        if (asset === 'background')  createBackground();
+
+        // router.push(`/edit/${resource?.public_id}`)
+
+    }, [resource])
+
+
+    if (resource && redirect) {
         return (
             <div>
                 Imagen cargada, espere...
@@ -45,15 +101,16 @@ export const Widget = () => {
                 maxFiles: 1, // default: 1
                 language: 'es',
                 autoMinimize: false,
+                clientAllowedFormats: formats,
                 text: {
                     es: {
                         or: 'o',
-                        heading: 'Arrastra o sube una imagen',
+                        heading: infoHeading,
                         menu: {
                             files: 'Mis archivos'
                         },
                         local: {
-                            dd_title_single: 'Arrastra o sube una imagen',
+                            dd_title_single: infoHeading,
                             browse: 'Examinar',
                         }
                     }
@@ -74,19 +131,22 @@ export const Widget = () => {
 
             }}
             onQueuesEnd={(_result: any, { widget }: { widget: any }) => {
-                              
+
                 widget.close();
             }}
         >
             {({ open }: { open: () => void }) => {
                 function handleOnClick() {
-                    
+
                     open();
                 }
                 return (
-                    <button onClick={handleOnClick}>
-                        Upload an Image
-                      
+                    <button
+                        onClick={handleOnClick}
+                        className={className}
+                    >
+                        {buttonText}
+
                     </button>
                 );
             }}

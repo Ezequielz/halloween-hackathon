@@ -7,7 +7,7 @@ import { useImageEditor } from '@/hooks';
 
 export const ControlsAside = () => {
 
-    const { selectedSticker, imgCreated, setSelectedSticker } = useImageStore( store => store)
+    const { selectedSticker, imgCreated, setSelectedSticker } = useImageStore(store => store)
 
     const { onStickerUpdate } = useImageEditor()
 
@@ -16,36 +16,36 @@ export const ControlsAside = () => {
 
 
         if (selectedSticker) {
-     
+
             onStickerUpdate(selectedSticker.id, undefined, undefined, newSize, newSize);
 
-            setSelectedSticker( { ...selectedSticker, size: { width: newSize, height: newSize } } );
+            setSelectedSticker({ ...selectedSticker, size: { width: newSize, height: newSize } });
         }
     };
 
     const handleAngleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newAngle = event.target.value;
         if (selectedSticker) {
-    
+
             onStickerUpdate(selectedSticker.id, undefined, undefined, undefined, undefined, newAngle);
-       
-            setSelectedSticker( { ...selectedSticker, position: { ...selectedSticker.position, angle: +newAngle } } );
+
+            setSelectedSticker({ ...selectedSticker, position: { ...selectedSticker.position, angle: +newAngle } });
         }
 
 
     };
 
-  
+
     return (
         <aside className="w-1/5 bg-slate-900 p-4">
 
 
             <h3>Agrega un texto</h3>
-            <TextOverlayMenu  />
+            <TextOverlayMenu />
             <hr className='border-2 border-gray-500 w-full my-5' />
             {selectedSticker && (
                 <>
-                    <h2 className="mb-4">Sticker {selectedSticker?.name}</h2>
+                    <h2 className="mb-4">Sticker</h2>
                     <div>
                         <label htmlFor="size-slider">Size:</label>
                         <input
@@ -53,7 +53,7 @@ export const ControlsAside = () => {
                             type="range"
                             min="50"
                             max="300"
-                            value={selectedSticker.size.width} 
+                            value={selectedSticker.size.width}
                             onChange={handleSizeChange}
                         />
 
@@ -74,8 +74,12 @@ export const ControlsAside = () => {
                 </>
             )}
 
+            {
+                selectedSticker && (
 
-
+                    <hr className='border-2 border-gray-500 w-full my-5' />
+                )
+            }
             <div>
                 <a href={imgCreated} target='_blank'>
                     Imagen generada

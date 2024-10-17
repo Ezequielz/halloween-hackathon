@@ -4,12 +4,13 @@
 import { Rnd } from 'react-rnd';
 import type { TextImage } from '@/interfaces';
 import { useImageStore } from '@/store';
-
-
+import { useImageEditor } from '@/hooks';
 
 export const RndText = () => {
+  const { text, textSelected, setText, setTextSelected } = useImageStore(store => store);
 
-  const { text, setText } = useImageStore(store => store);
+  const { scaleX, handleSelectSticker } = useImageEditor();
+  const scaledFontSize = Math.round(text.size / scaleX)
   const updateText = (
     newX?: number,
     newY?: number,
@@ -31,8 +32,10 @@ export const RndText = () => {
 
     setText(textToUpdate);
   };
-  const handleDragStop = (e: any, d: any) => {
-    updateText(+d.x, +d.y);
+
+  const handleDragStart = () => {
+    handleSelectSticker(undefined);
+    setTextSelected(true);
   };
 
   if (!text.content) return null;
@@ -42,17 +45,21 @@ export const RndText = () => {
     <Rnd
       size={{ width: 'auto', height: 'auto' }}
       position={{ x: text.position.x, y: text.position.y }}
-      onDragStop={handleDragStop}
+      onDragStop={(e, d) => updateText(+d.x, +d.y)}
+      onDragStart={handleDragStart}
       enableResizing={{ bottomRight: true }}
     >
       <div
         style={{
-          fontSize: `${text.size}px`,
+          fontSize: `${scaledFontSize }px`,
           fontFamily: text.fontFamily,
           color: text.color,
           transform: `rotate(${text.position.angle}deg)`,
           whiteSpace: 'nowrap',
           fontWeight: text.fontWeight,
+          filter: textSelected
+            ? 'drop-shadow(0 0 0.75rem red)' 
+            : 'none', 
         }}
       >
         {text.content}

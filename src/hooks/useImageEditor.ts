@@ -34,6 +34,9 @@ export const useImageEditor = () => {
     } = useImageStore(state => state)
 
 
+    const scaleX = imageDimensions.width / actualWidthShownInFrontend;
+    const scaleY = imageDimensions.height / actualHeightShownInFrontend;
+
     const loadImageDimensions = (url: string) => {
         const img = new Image();
         img.src = url;
@@ -102,8 +105,8 @@ export const useImageEditor = () => {
             },
             position: {
                 gravity: 'north_west',
-                x: Math.round(text.position.x * (imageDimensions.width / actualWidthShownInFrontend)),
-                y: Math.round(text.position.y * (imageDimensions.height / actualHeightShownInFrontend)),
+                x: Math.round(text.position.x * scaleX),
+                y: Math.round(text.position.y * scaleY),
                 angle: text.position.angle,
             },
         };
@@ -119,8 +122,6 @@ export const useImageEditor = () => {
 
     const newOverlay = (sticker: Sticker) => {
   
-        const scaleX = imageDimensions.width / actualWidthShownInFrontend;
-        const scaleY = imageDimensions.height / actualHeightShownInFrontend;
 
         return {
             publicId: sticker.publicId,
@@ -184,6 +185,10 @@ export const useImageEditor = () => {
 
 
     return {
+        scaleX,
+        scaleY,
+
+        //Methods
         onStickerUpdate,
         handleSelectSticker
     };
