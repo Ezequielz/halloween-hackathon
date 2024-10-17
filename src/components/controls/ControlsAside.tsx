@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { TextOverlayMenu } from '../TextOverlayMenu';
+import { TextOverlayMenu } from './TextOverlayMenu';
 import { useImageStore } from '@/store';
 import { useImageEditor } from '@/hooks';
 
-interface Props {
-    url: string
-}
-
-export const ControlsAside = ({ url }: Props) => {
+export const ControlsAside = () => {
 
     const { selectedSticker, imgCreated, setSelectedSticker } = useImageStore( store => store)
 
-    const { onStickerUpdate } = useImageEditor(url)
+    const { onStickerUpdate } = useImageEditor()
 
     const handleSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSize = parseInt(event.target.value);

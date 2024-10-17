@@ -1,7 +1,8 @@
 'use client'
-import { CldImage } from 'next-cloudinary';
+
 import { useImageStore } from '@/store';
 import type { Background, Underlay } from '@/interfaces';
+import { CustomImage } from '../cloudinary/CustomImage';
 
 
 interface Props {
@@ -36,7 +37,7 @@ export const Backgrounds = ({ backgrounds }: Props) => {
 
         {backgrounds.map((background) => (
           <button onClick={() => onChangeUnderlay(background.id)} key={background.id}>
-            <CldImage
+            <CustomImage
               width="100"
               height="100"
               src={background.publicId}

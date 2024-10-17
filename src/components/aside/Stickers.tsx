@@ -1,18 +1,17 @@
 'use client';
 
-import { CldImage } from "next-cloudinary";
 import { useImageStore } from "@/store";
 import type { Sticker } from "@/interfaces";
 import { useImageEditor } from "@/hooks";
+import { CustomImage } from "../cloudinary/CustomImage";
 
 interface Props {
-    url: string;
     stickers: Sticker[]
 }
-export const Stickers = ({ stickers, url }: Props) => {
+export const Stickers = ({ stickers }: Props) => {
 
     const { setAllSelectedStickers, allSelectedStickers} = useImageStore();
-    const { handleSelectSticker } = useImageEditor(url);
+    const { handleSelectSticker } = useImageEditor();
 
     const addSticker = (name: string) => {
 
@@ -47,7 +46,7 @@ export const Stickers = ({ stickers, url }: Props) => {
                     onClick={() => addSticker(sticker.name)}
                     key={sticker.id}
                 >
-                    <CldImage
+                    <CustomImage
                         width="100"
                         height="100"
                         src={sticker.publicId}

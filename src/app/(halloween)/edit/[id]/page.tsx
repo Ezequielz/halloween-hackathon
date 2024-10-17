@@ -1,7 +1,9 @@
 // import { Img } from '@/components/cloudinary/Img';
-import { GenerateImage } from '@/components/GenerateImage';
+
 import { Metadata } from 'next';
 import { getCldImageUrl, getCldOgImageUrl } from 'next-cloudinary';
+import { Aside, ControlsAside, MainImage } from '@/components';
+import { Suspense } from 'react';
 
 
 
@@ -48,17 +50,22 @@ export default async function EditPage({ params }: Props) {
 
 
     const url = await getCldImageUrl({
-        src: `halloween-images/${imgId}`,    
-     
+        src: `halloween-images/${imgId}`,
+
     });
-    
+ 
     return (
-        <div >
+        <section>
+            <div className="flex gap-3">
 
-            <GenerateImage url={url} />
+                <Suspense fallback={<div className="w-1/5 bg-slate-900 p-4">Cargando...</div>}>
+                    <Aside  />
+                </Suspense>
 
-            {/* <Img url={url} /> */}
+                <MainImage url={url} />
 
-        </div>
+                <ControlsAside  />
+            </div>
+        </section>
     );
 }

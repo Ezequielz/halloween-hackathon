@@ -8,8 +8,9 @@ import type { Sticker, Underlay } from '@/interfaces';
 import { useImageStore } from '@/store';
 
 
-export const useImageEditor = (url: string) => {
+export const useImageEditor = () => {
     const {
+        urlDefaultImage,
         overlays,
         underlay,
         imageDimensions,
@@ -23,9 +24,7 @@ export const useImageEditor = (url: string) => {
         setImageDimensions,
         setActualWidthShownInFrontend,
         setActualHeightShownInFrontend,
-        setBackgrounds,
         setUnderlay,
-        setStickers,
         setOverlays,
         setImgCreated,
         setAllSelectedStickers,
@@ -58,32 +57,17 @@ export const useImageEditor = (url: string) => {
 
     useEffect(() => {
 
-        loadImageDimensions(url);
-    }, [url]);
+        loadImageDimensions(urlDefaultImage);
+    }, [urlDefaultImage]);
 
     useEffect(() => {
-        const imgElement = document.getElementById('main-image'); // Usar un id en tu <CldImage>
+        const imgElement = document.getElementById('main-image');
         if (imgElement) {
             setActualWidthShownInFrontend(imgElement.offsetWidth);
             setActualHeightShownInFrontend(imgElement.offsetHeight);
         }
-    }, [url, imageDimensions]);
+    }, [urlDefaultImage, imageDimensions]);
 
-
-
-
-
-    //TOOD reemplazarlos por DB
-    useEffect(() => {
-        setBackgrounds([
-            { id: 'background-1', publicId: 'halloween-images/pqpbmcpt71993avpnglm' },
-            { id: 'background-2', publicId: 'halloween-images/ip5deapchh5ofxiuavr9' },
-        ]);
-        setStickers([
-            { id: 'sticker-1', name: 'fantasma', publicId: 'halloween-images/sgzgayuvjo5dl5ezwcc3', position: { x: 0, y: 0, angle: 0 }, size: { width: 200, height: 300 } },
-            { id: 'sticker-2', name: 'calabaza', publicId: 'halloween-images/j6uvivifkmk5idazvpjo', position: { x: 0, y: 0, angle: 0 }, size: { width: 200, height: 300 } },
-        ]);
-    }, []);
 
     useEffect(() => {
         const updatedOverlays = allSelectedStickers.map(newOverlay);
@@ -94,7 +78,7 @@ export const useImageEditor = (url: string) => {
     useEffect(() => {
 
         const newUrl = getCldImageUrl({
-            src: url,
+            src: urlDefaultImage,
             width: imageDimensions.width,
             height: imageDimensions.height,
             removeBackground: true,
@@ -106,10 +90,9 @@ export const useImageEditor = (url: string) => {
     }, [overlays, underlay]);
 
     useEffect(() => {
-        if (!text.content) return; // Asegúrate de que el texto no esté vacío
-
+        if (!text.content) return; 
         const textOverlay = {
-            // publicId: 'text', // Public ID can be anything, since it's text overlay
+            
             text: {
                 color: text.color,
                 fontFamily: text.fontFamily,
@@ -125,7 +108,7 @@ export const useImageEditor = (url: string) => {
             },
         };
 
-        // Combina los overlays de stickers y texto
+     
         const updatedOverlays = [
             ...allSelectedStickers.map((sticker) => newOverlay(sticker)),
             textOverlay,
@@ -135,14 +118,14 @@ export const useImageEditor = (url: string) => {
     }, [text, allSelectedStickers]);
 
     const newOverlay = (sticker: Sticker) => {
-        // Calcular factor de escala
+  
         const scaleX = imageDimensions.width / actualWidthShownInFrontend;
         const scaleY = imageDimensions.height / actualHeightShownInFrontend;
 
         return {
             publicId: sticker.publicId,
             position: {
-                x: Math.round(sticker.position.x * scaleX), // Escalar las posiciones
+                x: Math.round(sticker.position.x * scaleX), 
                 y: Math.round(sticker.position.y * scaleY),
                 gravity: 'north_west',
                 angle: sticker.position.angle
@@ -150,7 +133,7 @@ export const useImageEditor = (url: string) => {
             effects: [
                 {
                     crop: 'fit',
-                    width: Math.round(sticker.size.width * scaleX), // Escalar también el tamaño
+                    width: Math.round(sticker.size.width * scaleX), 
                     height: Math.round(sticker.size.height * scaleY),
                 },
             ],

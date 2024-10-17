@@ -7,7 +7,7 @@ import { useImageStore } from '@/store';
 
 
 
-export const DraggableText = () => {
+export const RndText = () => {
 
   const { text, setText } = useImageStore(store => store);
   const updateText = (
@@ -34,6 +34,8 @@ export const DraggableText = () => {
   const handleDragStop = (e: any, d: any) => {
     updateText(+d.x, +d.y);
   };
+
+  if (!text.content) return null;
 
 
   return (

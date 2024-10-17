@@ -30,6 +30,9 @@ npm run dev
 - **Framework:** Next.js
 - **Lenguaje** Typescript
 
+### DB
+- Firebase
+
 
 
 

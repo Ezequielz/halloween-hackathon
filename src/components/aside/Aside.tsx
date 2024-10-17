@@ -3,22 +3,36 @@ import { Backgrounds } from "./Backgrounds";
 import { Stickers } from "./Stickers"
 import { getAllBackgrounds, getAllStickers } from "@/actions"
 
+export const Aside = async () => {
 
-interface Props {
-    url: string
-}
+    const [{ ok: stickersLoaded, stickers }, { ok: backgroundLoaded, backgrounds }] = await Promise.all([
+        getAllStickers(),
+        getAllBackgrounds()
+    ]);
 
-export const Aside = async ({ url }: Props) => {
-
-    const { stickers } = await getAllStickers();
-    const { backgrounds } = await getAllBackgrounds();
 
     return (
         <aside className="w-1/5 bg-slate-900 p-4">
 
-            <Stickers stickers={stickers ?? []} url={url}/>
+            {
+                stickersLoaded ? (
 
-            <Backgrounds backgrounds={backgrounds ?? []} url={url} />
+                    <Stickers stickers={stickers ?? []}  />
+                ) : (
+                    <div> No se pudo cargar los stickers </div>
+                )
+            }
+
+            {
+                backgroundLoaded ? (
+
+                    <Backgrounds backgrounds={backgrounds ?? []} />
+                ) : (
+                    <div> No se pudo cargar los backgrounds </div>
+                )
+
+            }
+
 
         </aside>
     )

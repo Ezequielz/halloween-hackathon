@@ -5,7 +5,7 @@ import { create } from 'zustand';
 import type { Background, Overlay, Sticker, TextImage, Underlay } from '@/interfaces';
 
 interface State {
-
+    urlDefaultImage: string;
     overlays: Overlay[]
     underlay: Underlay[]
     allSelectedStickers: Sticker[]
@@ -19,6 +19,7 @@ interface State {
     selectedSticker: Sticker | null
     text: TextImage
 
+    setUrlDefaultImage: (urlDefaultImage: string) => void
     setOverlays: (overlays: Overlay[]) => void
     setUnderlay: (underlay: Underlay[]) => void
     setAllSelectedStickers: (allSelectedStickers: Sticker[]) => void
@@ -47,7 +48,7 @@ const initialUnderlay: Underlay[] = [{
 
 
 export const useImageStore = create<State>()((set) => ({
-
+    urlDefaultImage: '',
     overlays: [],
     underlay: initialUnderlay,
     allSelectedStickers: [],
@@ -62,6 +63,7 @@ export const useImageStore = create<State>()((set) => ({
     text: initialText,
 
 
+    setUrlDefaultImage: (urlDefaultImage) => set({ urlDefaultImage }),
     setOverlays: (overlays) => set({ overlays }),
     setUnderlay: (underlay) => set({ underlay }),
     setAllSelectedStickers: (allSelectedStickers) => set({ allSelectedStickers }),
