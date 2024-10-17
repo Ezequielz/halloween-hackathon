@@ -11,7 +11,7 @@ const initialText: TextImage = {
     content: '',
     position: { x: 0, y: 0, angle: 0 },
     fontFamily: 'Arial',
-    color: '#000000',
+    color: '#e40d0d',
     fontWeight: 'bold',
     size: 24,
 };
@@ -34,7 +34,7 @@ export const TextOverlayMenu = () => {
             position: { x: text.position.x ?? 50, y: text.position.y ?? 50, angle: text.position.angle ?? 0 },
             fontFamily: text.fontFamily ?? 'Arial',
             fontWeight: text.fontWeight ?? 'normal',
-            color: text.color ?? 'black',
+            color: text.color ?? '#e40d0d',
             size: text.size ?? 24,
         };
         setText(newText);

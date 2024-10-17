@@ -7,7 +7,7 @@ import { getFirestore } from "firebase/firestore";
 
 const apiKey = process.env.API_KEY
 const authDomain = process.env.AUTHDOMAIN
-// const projectId = process.env.PROJECTID
+const projectId = process.env.PROJECTID
 // console.log(projectId)
 const storageBucket = process.env.STORAGEBUCKET
 const messagingSenderId = process.env.MESSAGINGSENDERID
@@ -16,7 +16,7 @@ const appId = process.env.APPID
 const firebaseConfig = {
   apiKey,
   authDomain,
-  projectId: 'hackathon-midudev',
+  projectId,
   storageBucket,
   messagingSenderId,
   appId

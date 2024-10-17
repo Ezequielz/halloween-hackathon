@@ -33,15 +33,13 @@ interface State {
     setText: (text: TextImage) => void
 }
 const initialText: TextImage = {
-    id: '1',
-    content: 'asd',
-    position: { x: 0, y: 0, angle: 0 },
+    content: '',
+    position: { x: 10, y: 10, angle: 0 },
     fontFamily: 'Arial',
-    color: '#000000',
+    color: '#e40d0d',
     fontWeight: 'bold',
     size: 24,
 };
-
 const initialUnderlay: Underlay[] = [{
     publicId: 'halloween-images/pqpbmcpt71993avpnglm',
     effects: [{ width: 1600, height: 900 }],
