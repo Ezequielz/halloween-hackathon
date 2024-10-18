@@ -79,7 +79,7 @@ export const useImageEditor = () => {
     }, [allSelectedStickers]);
 
     useEffect(() => {
-
+        //TODO generar descarga segun crop
         const newUrl = getCldImageUrl({
             src: urlDefaultImage,
             width: imageDimensions.width,
