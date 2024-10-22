@@ -43,11 +43,11 @@ export const Stickers = ({ stickers }: Props) => {
 
             <header className="flex justify-between items-center my-3">
                 <div className="flex justify-center items-center gap-2">
-                    <h2 className="text-2xl ">Stickers</h2>
+                    <h2 className="text-xl ">Stickers</h2>
 
                     <Widget
                         buttonText='+'
-                        className="border-2 border-blue-600 bg-blue-500/20 px-2 py-0.5 rounded-full hover:bg-blue-500 cursor-pointer"
+                        className="border-2 border-blue-600 bg-blue-500/70 px-2 py-0.5 rounded-full hover:bg-blue-500 cursor-pointer"
                         formats={['png']}
                         infoHeading="Arrastra o sube un sticker"
                         asset="sticker"
@@ -56,7 +56,7 @@ export const Stickers = ({ stickers }: Props) => {
                 </div>
                 <span
                     onClick={removeAllStickers}
-                    className="border-2 border-red-600 bg-red-500/20 px-2 py-0.5 rounded-full hover:bg-red-500 cursor-pointer"
+                    className="border-2 border-red-600 bg-red-500/20 text-xs px-2 py-0.5 rounded-full hover:bg-red-500 cursor-pointer"
                 >
                     Remover stickers
                 </span>

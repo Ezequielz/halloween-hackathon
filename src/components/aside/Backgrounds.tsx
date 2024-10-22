@@ -38,7 +38,7 @@ export const Backgrounds = ({ backgrounds }: Props) => {
         <h2 className="text-2xl ">Background</h2>
         <Widget
           buttonText='+'
-          className="border-2 border-blue-600 bg-blue-500/20 px-2 py-0.5 rounded-full hover:bg-blue-500 cursor-pointer"
+          className="border-2 border-blue-600 bg-blue-500/70 px-2 py-0.5 rounded-full hover:bg-blue-500 cursor-pointer"
           formats={['jpg', 'jpg', 'webp', 'avif']}
           infoHeading="Arrastra o sube un Background"
           asset='background'

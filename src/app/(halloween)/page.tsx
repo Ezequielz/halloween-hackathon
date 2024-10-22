@@ -20,7 +20,7 @@ export default function Home() {
 
             {/* Contenedor del botón de subir imagen y la imagen */}
             <Widget
-                className="group relative h-12 w-48 overflow-hidden rounded-lg bg-white text-lg shadow mr-4"
+                className="group relative h-12 w-48 overflow-hidden rounded-lg text-black bg-white text-lg shadow mr-4"
                 infoHeading="Arrastra o sube una imagen"
                 buttonText="Subir imagen"
                 redirect
