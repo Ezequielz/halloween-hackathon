@@ -75,8 +75,8 @@ export const Widget = ({ formats, redirect, redirectUrl, className, buttonText, 
 
         }
 
-        if (asset === 'sticker')  createSticker();
-        if (asset === 'background')  createBackground();
+        if (asset === 'sticker') createSticker();
+        if (asset === 'background') createBackground();
 
         // router.push(`/edit/${resource?.public_id}`)
 
@@ -145,9 +145,17 @@ export const Widget = ({ formats, redirect, redirectUrl, className, buttonText, 
                         onClick={handleOnClick}
                         className={className}
                     >
+                        <div className="absolute inset-0 w-3 bg-amber-400 transition-all duration-[250ms] ease-out group-hover:w-full"></div>
+
+                        <span className="relative text-black group-hover:text-white">
+
                         {buttonText}
+                        </span>
+                        
 
                     </button>
+
+
                 );
             }}
 

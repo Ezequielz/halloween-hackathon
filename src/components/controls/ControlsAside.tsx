@@ -80,11 +80,20 @@ export const ControlsAside = () => {
                     <hr className='border-2 border-gray-500 w-full my-5' />
                 )
             }
-            <div>
-                <a href={imgCreated} target='_blank'>
-                    Imagen generada
-                </a>
-            </div>
+
+            <a
+                className="px-4 py-2 group relative h-12 w-48 overflow-hidden rounded-2xl bg-green-500 text-lg font-bold text-white"
+                href={imgCreated}
+                target='_blank'>
+                Ver imagen terminada
+                <div className="absolute inset-0 h-full w-full scale-0 rounded-2xl transition-all duration-300 group-hover:scale-100 group-hover:bg-white/30"></div>
+            </a>
+
+            {/* <button class="group relative h-12 w-48 overflow-hidden rounded-2xl bg-green-500 text-lg font-bold text-white">
+    Hover me!
+    
+  </button> */}
+
 
         </aside>
     )
